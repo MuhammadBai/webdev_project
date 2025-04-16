@@ -2,7 +2,7 @@
 
 ---
 
-## Features I Implemented
+## Implemented Features
 
 ### Post Creation
 
