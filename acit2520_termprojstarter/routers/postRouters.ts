@@ -8,7 +8,7 @@ import { createPost, renderCreateForm } from "../controller/postController";
 
 // Show recent posts
 router.get("/", async (req: Request, res: Response) => {
-  const posts = PostModel.getAll();
+  const posts = await PostModel.getAll();
   const user = req.user;
   res.render("posts", { posts, user });
 });
@@ -21,14 +21,14 @@ router.post("/create", ensureAuthenticated, createPost);
 
 // Show a single post
 router.get("/show/:postid", async (req: Request, res: Response) => {
-  const post = PostModel.findById(parseInt(req.params.postid));
+  const post = await PostModel.findById(parseInt(req.params.postid));
   if (!post) return res.status(404).send("Post not found");
   res.render("individualPost", { post, user: req.user });
 });
 
 // Show form to edit a post
 router.get("/edit/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
-  const post = PostModel.findById(parseInt(req.params.postid));
+  const post = await PostModel.findById(parseInt(req.params.postid));
   if (!post) return res.status(404).send("Post not found");
   if (post.user !== req.user?.username) return res.status(403).send("Forbidden");
   res.render("editPost", { post });
@@ -36,7 +36,7 @@ router.get("/edit/:postid", ensureAuthenticated, async (req: Request, res: Respo
 
 // Handle editing a post
 router.post("/edit/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
-  const post = PostModel.findById(parseInt(req.params.postid));
+  const post = await PostModel.findById(parseInt(req.params.postid));
   if (!post) return res.status(404).send("Post not found");
   if (post.user !== req.user?.username) return res.status(403).send("Forbidden");
 
@@ -50,7 +50,7 @@ router.post("/edit/:postid", ensureAuthenticated, async (req: Request, res: Resp
 
 // Confirm deletion
 router.get("/deleteconfirm/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
-  const post = PostModel.findById(parseInt(req.params.postid));
+  const post = await PostModel.findById(parseInt(req.params.postid));
   if (!post) return res.status(404).send("Post not found");
   if (post.user !== req.user?.username) return res.status(403).send("Forbidden");
 
@@ -60,11 +60,11 @@ router.get("/deleteconfirm/:postid", ensureAuthenticated, async (req: Request, r
 // Handle deleting a post
 router.post("/delete/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
   const postId = parseInt(req.params.postid);
-  const post = PostModel.findById(postId);
+  const post = await PostModel.findById(postId);
   if (!post) return res.status(404).send("Post not found");
   if (post.user !== req.user?.username) return res.status(403).send("Forbidden");
 
-  const posts = PostModel.getAll();
+  const posts = await PostModel.getAll();
   const index = posts.findIndex((p) => p.id === postId);
   if (index > -1) posts.splice(index, 1);
 
@@ -73,7 +73,7 @@ router.post("/delete/:postid", ensureAuthenticated, async (req: Request, res: Re
 
 // Handle creating a comment
 router.post("/comment-create/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
-  const post = PostModel.findById(parseInt(req.params.postid));
+  const post = await PostModel.findById(parseInt(req.params.postid));
   if (!post) return res.status(404).send("Post not found");
 
   const { description } = req.body;

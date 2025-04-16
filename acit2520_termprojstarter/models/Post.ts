@@ -1,4 +1,4 @@
-export {}; // Add this line to remove "not a module" error
+export {}; // Added this line to remove "not a module" error
 
 type Comment = {
   id: number;
@@ -21,14 +21,14 @@ type Post = {
 const posts: Post[] = [];
 
 export default {
-  create: (post: Post) => {
+  create: async (post: Post) => {
     posts.push(post);
     return post;
   },
-  findById: (id: number) => {
+  findById: async (id: number) => {
     return posts.find((p) => p.id === id);
   },
-  getAll: () => {
+  getAll: async () => {
     return posts
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, 20);
