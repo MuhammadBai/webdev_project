@@ -13,25 +13,30 @@
     <main>
       <div class="authOptions">
         <h1>All Posts</h1>
-        <% if (!user) { %>
-          <a role="button" href="/auth/login">Login</a>
-        <% } else { %>
-          <a role="button" href="/auth/logout">Logout</a>
-        <% } %>
+        <div>
+          <% if (!user) { %>
+            <a role="button" href="/auth/login">Login</a>
+          <% } else { %>
+            <a role="button" href="/auth/logout">Logout</a>
+          <% } %>
+          <a role="button" href="/subs/list">Subgroups</a>
+        </div>
       </div>
 
       <h2>Welcome, <%= user?.uname || "Visitor" %>.</h2>
 
-      <div>
+      <div class="posts-container">
         <% if (posts && posts.length > 0) { %>
           <% posts.forEach(post => { %>
             <article class="individualPost">
               <a href="/posts/show/<%= post.id %>">
                 <h3><%= post.title %></h3>
               </a>
-              <p><%= post.description %></p>
-              <p><strong>Subgroup:</strong> <%= post.subgroup %></p>
-              <p><strong>Posted by:</strong> <%= post.creator.uname %></p>
+              <p class="post-description"><%= post.description %></p>
+              <div class="post-meta">
+                <span><strong>Subgroup:</strong> <%= post.subgroup %></span>
+                <span><strong>Posted by:</strong> <%= post.creator.uname %></span>
+              </div>
             </article>
           <% }) %>
         <% } else { %>
@@ -39,14 +44,8 @@
         <% } %>
       </div>
 
-      <hr />
-
-      <div>
-        <a href="/subs/list">Subgroups</a>
-      </div>
-
       <% if (user) { %>
-        <div>
+        <div class="action-buttons">
           <a role="button" href="/posts/create">Create Post</a>
         </div>
       <% } %>

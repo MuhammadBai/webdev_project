@@ -91,3 +91,6 @@
 - hid the create post button for users that are not logged in
 
 - partially formatted the subgroup listing page to show all subgroups 
+# Khoi:
+- fix and tweaks ejs and post and subgroups. 
+- make the website more neat
