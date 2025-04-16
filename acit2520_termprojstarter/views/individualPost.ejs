@@ -9,17 +9,57 @@
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css"
     />
     <link href="/css/style.css" rel="stylesheet" />
-    <title>Post</title>
+    <title><%= post.title %></title>
   </head>
   <body>
     <main>
       <div class="authOptions">
-        <h1>View Post</h1>
-        <a role="button" href="/posts">Home</a>
+        <h1><%= post.title %></h1>
+        <a role="button" href="/">⬅ Back to Home</a>
       </div>
-      <div>
-        <p>Implement this page yourself. It is from individualPost.ejs</p>
-      </div>
+
+      <% if (post.link) { %>
+        <p><strong>Link:</strong> <a href="<%= post.link %>" target="_blank"><%= post.link %></a></p>
+      <% } %>
+
+      <% if (post.description) { %>
+        <p><strong>Description:</strong> <%= post.description %></p>
+      <% } %>
+
+      <p>
+        <strong>Posted by:</strong> <%= post.user %><br />
+        <strong>Sub:</strong> <%= post.sub %><br />
+        <strong>Date:</strong> <%= post.createdAt.toLocaleString() %>
+      </p>
+
+      <hr />
+
+      <h2>Comments</h2>
+      <% if (post.comments && post.comments.length > 0) { %>
+        <ul>
+          <% post.comments.forEach(comment => { %>
+            <li>
+              <strong><%= comment.creator %>:</strong> <%= comment.description %><br/>
+              <small><%= comment.timestamp.toLocaleString() %></small>
+            </li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p>No comments yet. Be the first to comment!</p>
+      <% } %>
+
+      <hr />
+
+      <% if (user) { %>
+        <h3>Add a Comment</h3>
+        <form action="/posts/comment-create/<%= post.id %>" method="POST">
+          <label for="comment">Comment</label>
+          <textarea name="description" id="comment" rows="3" required></textarea>
+          <button type="submit">Submit Comment</button>
+        </form>
+      <% } else { %>
+        <p><a href="/auth/login">Log in</a> to comment on this post.</p>
+      <% } %>
     </main>
   </body>
 </html>

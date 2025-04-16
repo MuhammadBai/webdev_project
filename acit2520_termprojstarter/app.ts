@@ -1,3 +1,4 @@
+import "./types"; 
 import express from "express";
 import session from "express-session";
 import passport from "./middleware/passport";

@@ -1,49 +1,94 @@
-import express from "express";
-const router = express.Router();
-import { ensureAuthenticated } from "../middleware/checkAuth";
-import { getPosts } from "../fake-db";
+import express, { Request, Response, Router } from "express";
+const router: Router = express.Router();
 
-router.get("/", async (req, res) => {
-  const posts = await getPosts(20);
-  const user = await req.user;
+import { ensureAuthenticated } from "../middleware/checkAuth";
+import PostModel from "../models/Post";
+import SubModel from "../models/Sub";
+import { createPost, renderCreateForm } from "../controller/postController";
+
+// Show recent posts
+router.get("/", async (req: Request, res: Response) => {
+  const posts = PostModel.getAll();
+  const user = req.user;
   res.render("posts", { posts, user });
 });
 
-router.get("/create", ensureAuthenticated, (req, res) => {
-  res.render("createPosts");
+// Show form to create a post
+router.get("/create", ensureAuthenticated, renderCreateForm);
+
+// Handle creation of a new post
+router.post("/create", ensureAuthenticated, createPost);
+
+// Show a single post
+router.get("/show/:postid", async (req: Request, res: Response) => {
+  const post = PostModel.findById(parseInt(req.params.postid));
+  if (!post) return res.status(404).send("Post not found");
+  res.render("individualPost", { post, user: req.user });
 });
 
-router.post("/create", ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
+// Show form to edit a post
+router.get("/edit/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
+  const post = PostModel.findById(parseInt(req.params.postid));
+  if (!post) return res.status(404).send("Post not found");
+  if (post.user !== req.user?.username) return res.status(403).send("Forbidden");
+  res.render("editPost", { post });
 });
 
-router.get("/show/:postid", async (req, res) => {
-  // ⭐ TODO
-  res.render("individualPost");
+// Handle editing a post
+router.post("/edit/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
+  const post = PostModel.findById(parseInt(req.params.postid));
+  if (!post) return res.status(404).send("Post not found");
+  if (post.user !== req.user?.username) return res.status(403).send("Forbidden");
+
+  const { title, description, link } = req.body;
+  post.title = title || post.title;
+  post.description = description || post.description;
+  post.link = link || post.link;
+
+  res.redirect(`/posts/show/${post.id}`);
 });
 
-router.get("/edit/:postid", ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
+// Confirm deletion
+router.get("/deleteconfirm/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
+  const post = PostModel.findById(parseInt(req.params.postid));
+  if (!post) return res.status(404).send("Post not found");
+  if (post.user !== req.user?.username) return res.status(403).send("Forbidden");
+
+  res.render("deletePost", { post });
 });
 
-router.post("/edit/:postid", ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
+// Handle deleting a post
+router.post("/delete/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
+  const postId = parseInt(req.params.postid);
+  const post = PostModel.findById(postId);
+  if (!post) return res.status(404).send("Post not found");
+  if (post.user !== req.user?.username) return res.status(403).send("Forbidden");
+
+  const posts = PostModel.getAll();
+  const index = posts.findIndex((p) => p.id === postId);
+  if (index > -1) posts.splice(index, 1);
+
+  res.redirect("/");
 });
 
-router.get("/deleteconfirm/:postid", ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
-});
+// Handle creating a comment
+router.post("/comment-create/:postid", ensureAuthenticated, async (req: Request, res: Response) => {
+  const post = PostModel.findById(parseInt(req.params.postid));
+  if (!post) return res.status(404).send("Post not found");
 
-router.post("/delete/:postid", ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
-});
+  const { description } = req.body;
+  if (!description) return res.status(400).send("Comment cannot be empty");
 
-router.post(
-  "/comment-create/:postid",
-  ensureAuthenticated,
-  async (req, res) => {
-    // ⭐ TODO
-  }
-);
+  if (!post.comments) post.comments = [];
+
+  post.comments.push({
+    id: Date.now(),
+    creator: req.user!.username,
+    description,
+    timestamp: new Date(),
+  });
+
+  res.redirect(`/posts/show/${post.id}`);
+});
 
 export default router;

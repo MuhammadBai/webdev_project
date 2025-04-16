@@ -35,3 +35,19 @@ export type TUsers = {
 };
 
 export type TVotes = { user_id: number; post_id: number; value: number }[];
+
+// Extend Express types so TypeScript knows about req.user
+declare global {
+  namespace Express {
+    interface User {
+      id: number;
+      username: string;
+    }
+
+    interface Request {
+      user?: User;
+    }
+  }
+}
+
+export {}; //Marks this as a module so the declarations apply

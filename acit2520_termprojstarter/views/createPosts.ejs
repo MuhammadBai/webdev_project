@@ -9,15 +9,45 @@
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css"
     />
     <link href="/css/style.css" rel="stylesheet" />
-    <title>CreatePost</title>
+    <title>Create Post</title>
   </head>
   <body>
     <main>
       <div class="authOptions">
-        <h1>Create Post</h1>
-        <a role="button" href="/posts">Home</a>
+        <h1>Create a New Post</h1>
+        <a role="button" href="/">⬅ Back to Home</a>
       </div>
-      <p>Implement this yourself. It comes from createPost.ejs</p>
+
+      <form action="/posts/create" method="POST">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" required />
+
+        <label for="description">Description</label>
+        <textarea
+          name="description"
+          id="description"
+          rows="4"
+          placeholder="Write something or leave blank if you're adding a link"
+        ></textarea>
+
+        <label for="link">Link (optional)</label>
+        <input
+          type="url"
+          name="link"
+          id="link"
+          placeholder="https://example.com"
+        />
+
+        <label for="sub">Subgroup</label>
+        <input type="text" name="sub" id="sub" list="subgroup-options" required />
+        <datalist id="subgroup-options">
+          <% subs.forEach(sub => { %>
+            <option value="<%= sub.name %>"></option>
+          <% }) %>
+        </datalist>
+
+        <button type="submit">Post</button>
+      </form>
     </main>
   </body>
 </html>
