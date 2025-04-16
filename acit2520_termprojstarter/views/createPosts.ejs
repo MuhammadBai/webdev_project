@@ -2,51 +2,51 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Post</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css"
     />
     <link href="/css/style.css" rel="stylesheet" />
-    <title>Create Post</title>
   </head>
   <body>
     <main>
       <div class="authOptions">
-        <h1>Create a New Post</h1>
-        <a role="button" href="/">⬅ Back to Home</a>
+        <h1>Create Post</h1>
+        <a role="button" href="/posts">Home</a>
       </div>
 
       <form action="/posts/create" method="POST">
-        <label for="title">Title</label>
-        <input type="text" name="title" id="title" required />
+        <label>
+          Title:
+          <input type="text" name="title" placeholder="Enter a title" required />
+        </label>
 
-        <label for="description">Description</label>
-        <textarea
-          name="description"
-          id="description"
-          rows="4"
-          placeholder="Write something or leave blank if you're adding a link"
-        ></textarea>
+        <label>
+          Description:
+          <textarea
+            name="description"
+            placeholder="Enter a description"
+            required
+          ></textarea>
+        </label>
+        
+        <label>
+          Link (optional):
+          <input type="text" name="link" placeholder="Enter a link" />
+        </label>
 
-        <label for="link">Link (optional)</label>
-        <input
-          type="url"
-          name="link"
-          id="link"
-          placeholder="https://example.com"
-        />
+        <label>
+          Subgroup:
+          <input
+            type="text"
+            name="subgroup"
+            placeholder="Enter a subgroup name"
+            required
+          />
+        </label>
 
-        <label for="sub">Subgroup</label>
-        <input type="text" name="sub" id="sub" list="subgroup-options" required />
-        <datalist id="subgroup-options">
-          <% subs.forEach(sub => { %>
-            <option value="<%= sub.name %>"></option>
-          <% }) %>
-        </datalist>
-
-        <button type="submit">Post</button>
+        <button type="submit">Submit Post</button>
       </form>
     </main>
   </body>

@@ -2,63 +2,65 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= post.title %></title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css"
     />
     <link href="/css/style.css" rel="stylesheet" />
-    <title><%= post.title %></title>
   </head>
   <body>
     <main>
       <div class="authOptions">
         <h1><%= post.title %></h1>
-        <a role="button" href="/">⬅ Back to Home</a>
+        <a role="button" href="/posts">Back to All Posts</a>
       </div>
 
-      <% if (post.link) { %>
-        <p><strong>Link:</strong> <a href="<%= post.link %>" target="_blank"><%= post.link %></a></p>
-      <% } %>
+      <article>
+        <% if (post.link) { %>
+          <h2>
+            <a href="<%= post.link %>" target="_blank">
+              <%= post.link %>
+            </a>
+          </h2>
+        <% } %>
+        <p><%= post.description %></p>
+        <p><strong>Subgroup:</strong> <%= post.subgroup %></p>
+        <p><strong>Posted by:</strong> <%= post.creator.uname %></p>
+        <p><strong>Votes:</strong> <%= post.votes.length %></p>
 
-      <% if (post.description) { %>
-        <p><strong>Description:</strong> <%= post.description %></p>
-      <% } %>
+        <% if (user && user.id === post.creator.id) { %>
+          <p>
+            <a href="/posts/edit/<%= post.id %>">Edit</a> |
+            <a href="/posts/deleteconfirm/<%= post.id %>">Delete</a>
+          </p>
+        <% } %>
+      </article>
 
-      <p>
-        <strong>Posted by:</strong> <%= post.user %><br />
-        <strong>Sub:</strong> <%= post.sub %><br />
-        <strong>Date:</strong> <%= post.createdAt.toLocaleString() %>
-      </p>
-
-      <hr />
-
-      <h2>Comments</h2>
-      <% if (post.comments && post.comments.length > 0) { %>
-        <ul>
-          <% post.comments.forEach(comment => { %>
-            <li>
-              <strong><%= comment.creator %>:</strong> <%= comment.description %><br/>
-              <small><%= comment.timestamp.toLocaleString() %></small>
-            </li>
-          <% }) %>
-        </ul>
-      <% } else { %>
-        <p>No comments yet. Be the first to comment!</p>
-      <% } %>
-
-      <hr />
+      <section>
+        <h3>Comments (<%= post.comments.length %>)</h3>
+        <% if (post.comments.length === 0) { %>
+          <p>No comments yet.</p>
+        <% } else { %>
+          <ul>
+            <% post.comments.forEach(comment => { %>
+              <li>
+                <strong><%= comment.creator.uname %></strong>:
+                <%= comment.description %>
+              </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </section>
 
       <% if (user) { %>
-        <h3>Add a Comment</h3>
         <form action="/posts/comment-create/<%= post.id %>" method="POST">
-          <label for="comment">Comment</label>
-          <textarea name="description" id="comment" rows="3" required></textarea>
-          <button type="submit">Submit Comment</button>
+          <label for="description">Add a comment:</label>
+          <textarea name="description" required></textarea>
+          <button type="submit">Comment</button>
         </form>
       <% } else { %>
-        <p><a href="/auth/login">Log in</a> to comment on this post.</p>
+        <p><a href="/auth/login">Login</a> to comment.</p>
       <% } %>
     </main>
   </body>

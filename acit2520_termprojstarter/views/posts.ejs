@@ -2,47 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css"
     />
     <link href="/css/style.css" rel="stylesheet" />
-    <title>Homepage</title>
   </head>
   <body>
     <main>
       <div class="authOptions">
-        <h1>Homepage</h1>
+        <h1>All Posts</h1>
         <% if (!user) { %>
-        <a role="button" href="/auth/login">Login</a>
+          <a role="button" href="/auth/login">Login</a>
         <% } else { %>
-        <a role="button" href="/auth/logout">Logout</a>
+          <a role="button" href="/auth/logout">Logout</a>
         <% } %>
       </div>
+
       <h2>Welcome, <%= user?.uname || "Visitor" %>.</h2>
+
       <div>
-        <p>All Posts</p>
-        <% posts.forEach(post => { %>
-        <div class="individualPost">
-          <a href="/posts/show/<%=post.id%>"><%= post.title %></a>
-          <p><%= post.description %></p>
-        </div>
-        <% }) %>
+        <% if (posts && posts.length > 0) { %>
+          <% posts.forEach(post => { %>
+            <article class="individualPost">
+              <a href="/posts/show/<%= post.id %>">
+                <h3><%= post.title %></h3>
+              </a>
+              <p><%= post.description %></p>
+              <p><strong>Subgroup:</strong> <%= post.subgroup %></p>
+              <p><strong>Posted by:</strong> <%= post.creator.uname %></p>
+            </article>
+          <% }) %>
+        <% } else { %>
+          <p>No posts found.</p>
+        <% } %>
       </div>
+
+      <hr />
 
       <div>
         <a href="/subs/list">Subgroups</a>
       </div>
 
-      <div>
-        <a role="button" href="/posts/create">Create Post</a>
-      </div>
-      <p style="color: rgb(197, 172, 172)">
-        😦 Heads up...you probably want to hide the Create Post button above for
-        non-logged-in users!
-      </p>
+      <% if (user) { %>
+        <div>
+          <a role="button" href="/posts/create">Create Post</a>
+        </div>
+      <% } %>
     </main>
   </body>
 </html>

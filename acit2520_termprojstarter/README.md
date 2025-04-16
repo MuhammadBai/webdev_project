@@ -78,3 +78,16 @@
 - Everything is handled using clean async/await logic and protected routes.
 
 ---
+
+# Chelcie:
+- fixed postController to take fake db info and store it to create posts/etc
+
+- fixed passport.ts passport types to not say 'any'
+
+- removed async requests from postRouters 
+
+- adjusted the posts to allow for the user that posted only to be able to delete and edit
+
+- hid the create post button for users that are not logged in
+
+- partially formatted the subgroup listing page to show all subgroups 
