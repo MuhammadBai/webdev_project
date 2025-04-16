@@ -60,17 +60,6 @@
 
 ---
 
-## Technologies Used
-
-- **Node.js** + **Express**
-- **TypeScript**
-- **EJS** templating
-- **Passport.js** for authentication
-- **Pico.css** for lightweight styling
-- **In-memory data models** for Posts, Subgroups, Comments, Users
-
----
-
 ## Structure I Worked With
 
 - `/models/Post.ts` – stores and manages post data
