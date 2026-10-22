@@ -1,4 +1,4 @@
-# Community Posts Web App (ACIT 2520 Team Project)
+# Community Posts Web App 
 
 A Reddit-style web app built with **TypeScript, Express and EJS**. Users log in, create posts in topic groups ("subs"), comment on posts, and edit or delete their own posts.
 
