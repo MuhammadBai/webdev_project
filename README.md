@@ -4,7 +4,7 @@ A Reddit-style web app built with **TypeScript, Express and EJS**. Users log in,
 
 Built as a 4-person team project at BCIT. The app code is in [`acit2520_termprojstarter/`](acit2520_termprojstarter/). The detailed feature list and each team member's contributions are in [its README](acit2520_termprojstarter/README.md).
 
-## My contribution (Muhammad Baig Mirza)
+## My contribution
 
 I built the **post workflow**:
 
